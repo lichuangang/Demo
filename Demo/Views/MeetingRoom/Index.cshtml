@@ -1,0 +1,39 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    ViewBag.Nav = "MeetingRoom/Index";
+}
+
+
+<div id="demo">
+    <grid v-bind:rows="PageData.Data"
+          v-bind:columns="Columns"
+          v-bind:sort="PageInfo.Sort"
+          v-bind:asc="PageInfo.IsAsc"
+          v-bind:sort-click="OnSortClick">
+    </grid>
+    <page v-bind:page-index="PageInfo.PageIndex"
+          v-bind:page-count="PageData.PageCount"
+          v-bind:page-total="PageData.Total"
+          v-bind:onchange="OnPageChange">
+    </page>
+</div>
+
+<script>
+    //表单
+    var moduleVue = GridVue({
+        id: '#demo',
+        url: '@Url.Content("~/MeetingRoom/Grid")',
+        columns: [
+        { title: '名称', name: 'Name', sort: true },
+        { title: '标题', name: 'Title' },
+        {
+            title: '图标', name: 'IconCls', format: function (item) {
+                return '<i class="{clsName}"> </i>'.replace('{clsName}', item.IconCls);
+            }
+        },
+        { title: '地址', name: 'Url' },
+        { title: '图标样式', name: 'IconCls' }
+        ]
+    });
+</script>

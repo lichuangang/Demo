@@ -1,0 +1,79 @@
+﻿
+@Html.Partial("~/Views/Vue/_GridBtn.cshtml")
+
+<template id="template-grid">
+    
+    <table class="table table-striped table-bordered table-hover dataTable no-footer">
+        <thead>
+            <tr>
+                <th v-for="key in columns" v-bind:class="{'sorting':isSortingClass(key),'sorting_asc':isAscClass(key),'sorting_desc':isDescClass(key)}" v-on:click="orderBy(key)">
+                    {{key.title}}
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr v-for="entry in rows">
+                <td v-for="key in columns">
+                    <grid-btn v-bind:pram="entry" v-bind:column="key"></grid-btn>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</template>
+
+<script>
+    Vue.component('grid', {
+        template: '#template-grid',
+        props: {
+            columns: Array,
+            rows: Array,
+            sort: String,
+            asc: Boolean,
+            sortClick: Function
+        },
+        methods: {
+            isSortingClass: function (key) {
+                if (key.sort) {
+                    var name = key.name;
+                    if (name == this.sort) {
+                        return false;
+                    }
+                    return true;
+                }
+                return false;
+            },
+            isAscClass: function (key) {
+                if (key.sort) {
+                    var name = key.name;
+                    if (name == this.sort) {
+                        if (this.asc) {
+                            return true;
+                        }
+                        return false;
+                    }
+                    return false;
+                }
+                return false;
+            },
+            isDescClass: function (key) {
+                if (key.sort) {
+                    var name = key.name;
+                    if (name == this.sort) {
+                        if (!this.asc) {
+                            return true;
+                        }
+                        return false;
+                    }
+                    return false;
+                }
+                return false;
+            },
+            orderBy: function (key) {
+                if (!key.sort)
+                    return;
+                this.sortClick(key.name);
+            }
+        }
+    })
+</script>
+

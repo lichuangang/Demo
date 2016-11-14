@@ -1,0 +1,97 @@
+﻿@{
+    ViewBag.Title = "会议查询";
+    ViewBag.Nav = "Meeting/Search";
+}
+<link href="~/assets/css/bootstrap-datepicker.css" rel="stylesheet" />
+<script src="~/assets/js/datetime/bootstrap-datepicker.js"></script>
+<div id="demo">
+    <div class="table-toolbar">
+        <div class="dataTables_filter">
+            <label>
+                <input type="search" class="form-control" v-model="PageInfo.Title" placeholder="标题">
+            </label>
+
+            <div class="input-group" style="float:left;margin-left:10px;width:260px">
+                <span class="input-group-addon">
+                    日期：
+                </span>
+                <input id="date-picker" class="form-control date-picker" type="text" data-date-format="yyyy-mm-dd" value="">
+            </div>
+            <label style="margin-left:10px;">
+                <button type="button" class="btn btn-default" onclick="loadBySearch()">
+                    查询
+                </button>
+            </label>
+        </div>
+    </div>
+
+    <grid v-bind:rows="PageData.Data"
+          v-bind:columns="Columns"
+          v-bind:sort="PageInfo.Sort"
+          v-bind:asc="PageInfo.IsAsc"
+          v-bind:sort-click="OnSortClick">
+    </grid>
+    <page v-bind:page-index="PageInfo.PageIndex"
+          v-bind:page-count="PageData.PageCount"
+          v-bind:page-total="PageData.Total"
+          v-bind:onchange="OnPageChange">
+    </page>
+</div>
+
+<script>
+    //表单
+    var meetingVue = GridVue({
+        id: '#demo',
+        url: '@Url.Content("~/Meeting/Grid")',
+        columns: [
+        {
+            title: '操作', name: 'opt', format: function (item) {
+                var html = '<a onclick="deleteBy({0})" href="javascript:void(0)" class="btn btn-danger btn-xs"><i class="fa fa-trash-o"></i> 删除</a>'.replace("{0}", item.ID);
+                return html
+            }
+        },
+        { title: '会议标题', name: 'Title' },
+        { title: '会议室', name: 'MeetingRoomID', sort: true },
+        {
+            title: '日期', name: 'UseDate', format: function (item) {
+                return item.UseDate.toFomatDate();
+            },
+            sort: true
+        },
+        { title: '申请人', name: 'CreateUser' },
+        { title: '参会人数', name: 'PeopleCount' }
+        ],//查询之前，需要增加时间参数
+        getPramFunc: function (pageInfo) {
+            pageInfo.UseDate = $("#date-picker").val();
+        },
+        defaultPram: { Sort: 'UseDate', IsAsc: false }
+    });
+
+    function deleteBy(id) {
+        bootbox.confirm('你确定要删除该条记录吗？', function (ok) {
+            if (ok) {
+                $.post('@Url.Content("~/Meeting/Delete")', { id: id }, function (res) {
+                    if (res.Success) {
+                        meetingVue.flushData();
+                    } else {
+                        bootbox.alert(res.Msg);
+                    }
+                });
+            }
+        })
+    }
+
+    function loadBySearch() {
+        if ($("date-picker").val() != '') {
+            meetingVue.PageInfo.UseDate = $("date-picker").val();
+        }
+        meetingVue.flushData()
+    }
+
+    $(function () {
+        $('.date-picker').datepicker({
+            autoclose: true,
+            clearBtn: true,
+        });
+    })
+</script>

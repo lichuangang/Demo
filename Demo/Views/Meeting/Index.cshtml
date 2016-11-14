@@ -1,0 +1,337 @@
+﻿@{
+    ViewBag.Title = "会议申请";
+    ViewBag.Nav = "Meeting/Index";
+}
+@model DateTime
+
+<link href="~/Content/nstSlider/jquery.nstSlider.css" rel="stylesheet" />
+<script src="~/Content/nstSlider/jquery.nstSlider.js"></script>
+<link href="~/assets/css/bootstrap-datepicker.css" rel="stylesheet" />
+<script src="~/assets/js/datetime/bootstrap-datepicker.js"></script>
+<style>
+    .row .col-md-1 {
+        text-align: left;
+        padding-left: 0px;
+        padding-right: 0px;
+    }
+</style>
+
+
+<div id="myApp">
+    <div class="row panel">
+        <div class="input-group" style="float:left;margin-left:10px;width:260px">
+            <span class="input-group-addon">
+                日期：
+            </span>
+            <input id="date-picker" class="form-control date-picker" type="text" data-date-format="yyyy-mm-dd" value="@Model.ToString("yyyy-MM-dd")">
+        </div>
+    </div>
+    <div v-for="(item, index) in meeting" class="well">
+
+        <div class="panel panel-success">
+            <div class="panel-heading">
+                <h3 class="panel-title"><b>{{item.name}}</b></h3>
+            </div>
+            <div class="panel-body">
+                <div class="row" style="padding-left:15px;padding-right:15px;">
+                    <div class="col-md-1"> 9:00</div>
+                    <div class="col-md-1">10:00</div>
+                    <div class="col-md-1">11:00</div>
+                    <div class="col-md-1">12:00</div>
+                    <div class="col-md-1">13:00</div>
+                    <div class="col-md-1">14:00</div>
+                    <div class="col-md-1">15:00</div>
+                    <div class="col-md-1">16:00</div>
+                    <div class="col-md-1">17:00</div>
+                    <div class="col-md-1">18:00</div>
+                    <div class="col-md-1">19:00</div>
+                    <div class="col-md-1">20:00</div>
+                </div>
+
+                <div class="nstSlider"
+                     data-range_min="0" data-range_max="48"
+                     data-cur_min="0" data-cur_max="0"
+                     v-bind="{id:'slider_' + index}">
+                    <div v-for="(met,i) in item.checkedList" v-bind="{id:'met_'+index+'_'+ i,'data-original-title':getTimeTitle(met.min,met.max),'data-max':met.max,'data-min':met.min}" class="highlightPanel" data-toggle="tooltip" data-placement="top">{{met.title}}</div>
+                    <div v-bind="{id:'bar_'+index}" class="bar"></div>
+                    <div v-bind="{id:'leftG_' + index}" class="leftGrip"></div>
+                    <div v-bind="{id:'rightG_'+index}" class="rightGrip"></div>
+                </div>
+
+                <div class="well-sm">
+                    <div v-bind="{id:'slider_' + index + 'show'}" class="col-lg-4" style="font-weight:bolder;font-size:18px;">
+
+                    </div>
+                    <div class="col-lg-8" style="text-align:right">
+                        <span @@click="onMetclick(index)" class="glyphicon glyphicon-plus" style="cursor:pointer;font-size:18px;"></span>
+                    </div>
+                </div>
+
+                <div class="well-sm panel" style="clear:both;display:none" v-bind="{'id':'formDiv-'+index}">
+                    <div style="height:20px"></div>
+                    <form class="form-horizontal" role="form" v-bind="{'id':'form-'+index}">
+
+                        <input type="hidden" v-bind="{id:'room-'+index,'value':item.id}" />
+                        <input type="hidden" v-bind="{id:'min-value-'+index}" value="0" />
+                        <input type="hidden" v-bind="{id:'max-value-'+index}" value="0" />
+
+                        <div class="form-group">
+                            <label for="inputEmail3" class="col-sm-2 control-label"><b>会议标题：</b></label>
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control" name="title" placeholder="请输入标题">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="inputPassword3" class="col-sm-2 control-label"><b>参加人数：</b></label>
+                            <div class="col-sm-3">
+                                <input type="text" class="form-control" name="peopleCount" placeholder="请输入参会人数">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="inputPassword3" class="col-sm-2 control-label"><b>其它信息：</b></label>
+                            <div class="col-sm-10">
+                                <div class="checkbox">
+                                    <label>
+                                        <input type="checkbox" data-model="T1" class="colored-success">
+                                        <span class="text">是否有局方领导和外方领导参加</span>
+                                    </label>
+                                </div>
+                                <div class="checkbox">
+                                    <label>
+                                        <input type="checkbox" data-model="T2" class="colored-success">
+                                        <span class="text">是否有公司高管参加</span>
+                                    </label>
+                                </div>
+                                <div class="checkbox">
+                                    <label>
+                                        <input type="checkbox" data-model="T3" class="colored-success">
+                                        <span class="text">是否公司部门领导参加</span>
+                                    </label>
+                                </div>
+                                <div class="checkbox">
+                                    <label>
+                                        <input type="checkbox" data-model="T4" class="colored-success">
+                                        <span class="text">是否为业务培训</span>
+                                    </label>
+                                </div>
+                                <div class="checkbox">
+                                    <label>
+                                        <input type="checkbox" data-model="T5" class="colored-success">
+                                        <span class="text">是否为部门例会</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-offset-2 col-sm-10">
+                                <a href="javascript:void(0);" class="btn btn-palegreen" @@click="onSubmit(index)">提交</a>
+                                <a href="javascript:void(0);" class="btn btn-default shiny" @@click="onMetclick(index)">取消</a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- 5. setup the slider! -->
+<script>
+    var myvue = new Vue({
+        el: '#myApp',
+        data: {
+            meeting: []
+        },
+        updated: function () {
+            bindEvent();
+        },
+        methods: {
+            getTimeTitle: getTimeTitle,
+            onMetclick: function (index) {
+                metclick(index)
+            },
+            onSubmit: function (index) {
+                var bsValidator = $('#form-' + index).data('bootstrapValidator');
+                bsValidator.validate();
+                if (bsValidator.isValid()) {
+                    postData(index)
+                }
+            }
+        }
+    });
+
+    function metclick(index) {
+        if ($("#formDiv-" + index).css("display") == "none") {
+            $("#formDiv-" + index).show();
+            validator("#form-" + index);
+        } else {
+            $("#formDiv-" + index).hide();
+            resetForm("#form-" + index);
+        }
+    }
+
+    function postData(index) {
+        var data = getFormData(index);
+        if (false == checkTime(data, myvue.meeting[index].checkedList)) {
+            bootbox.alert("请正确选择会议时间，不能与其它会议时间冲突");
+            return;
+        }
+        //updateChecked(data);;
+        //return;
+        $.post('@Url.Content("~/Meeting/Save")', data, function (result) {
+            if (result.Success) {
+                updateChecked(data);
+            } else {
+                bootbox.alert(result.Msg);
+            }
+        });
+    }
+
+    function updateChecked(data) {
+        for (var i = 0; i < myvue.meeting.length; i++) {
+            if (myvue.meeting[i].id == data.roomid) {
+                myvue.meeting[i].checkedList.push({ title: data.title, min: data.min, max: data.max });
+                //重置表单
+                metclick(i);
+                break;
+            }
+        }
+    }
+
+    function checkTime(data, checked) {
+        if (data.max == 0) return false;
+
+        for (var i = 0; i < checked.length; i++) {
+            //任意一个值在某个时间区域
+            if ((parseInt(data.min) < parseInt(checked[i].min) && parseInt(data.max) > parseInt(checked[i].min))
+                || (parseInt(data.min) < parseInt(checked[i].max) && parseInt(data.max) > parseInt(checked[i].max))
+                || (parseInt(data.min) >= parseInt(checked[i].min) && parseInt(data.max) <= parseInt(checked[i].max))
+                ) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    function getFormData(index) {
+        var data = {};
+        data.roomid = $("#room-" + index).val();
+        data.date = $("#date-picker").val();
+        data.min = $("#min-value-" + index).val();
+        data.max = $("#max-value-" + index).val();
+        var $form = $("#form-" + index);
+        data.title = $form.find("input[name=title]").val();
+        data.peopleCount = $form.find("input[name=peopleCount]").val();
+        var otherInfo = {};
+        var checkboxArr = $form.find(".checkbox input[type=checkbox]");
+        for (var i = 0; i < checkboxArr.length; i++) {
+            var ev = checkboxArr[i];
+            otherInfo[$(ev).data('model')] = $(ev).is(':checked');
+        }
+        data.other = JSON.stringify(otherInfo);
+        return (data);
+    }
+
+    function getTimeTitle(min, max) {
+        return getTime(min) + '~' + getTime(max);
+    }
+
+    function bindEvent() {
+        for (var i = 0; i < myvue.meeting.length; i++) {
+            var temp = $('#slider_' + i).nstSlider({
+                "left_grip_selector": "#leftG_" + i,
+                "right_grip_selector": "#rightG_" + i,
+                "value_bar_selector": "#bar_" + i,
+                "highlight": {
+                    "grip_class": "gripHighlighted",
+                    "panel_selector": ".highlightPanel",
+                },
+                "value_changed_callback": function (cause, leftValue, rightValue) {
+                    var id = $(this).attr('id');
+                    var index = id.split('_')[1];
+                    $("#min-value-" + index).val(leftValue);
+                    $("#max-value-" + index).val(rightValue);
+                    $('#' + id + 'show').html('当前选择时间：' + getTimeTitle(leftValue, rightValue));
+                },
+            });
+            //归位到0 0
+            temp.nstSlider('set_position', 0, 0)
+
+            for (var j = 0; j < myvue.meeting[i].checkedList.length; j++) {
+                temp.nstSlider('highlight_range_html', '#met_' + i + '_' + j);
+            }
+        }
+
+        $("[data-toggle=tooltip]").tooltip({ html: !0 })
+    }
+
+    function resetForm(id) {
+        $(id).bootstrapValidator('resetForm', true);
+        $(id).find(".checkbox input[type=checkbox]").attr('checked', null);
+    }
+
+    function validator(id) {
+        $(id).bootstrapValidator({
+            fields: {
+                title: {
+                    validators: {
+                        notEmpty: {
+                            message: '请输入标题'
+                        },
+                    }
+                },
+                peopleCount: {
+                    validators: {
+                        notEmpty: {
+                            message: '请输入参会人数'
+                        },
+                        regexp: {/* 只需加此键值对，包含正则表达式，和提示 */
+                            regexp: /^[\d]+$/,
+                            message: '只能是数字。'
+                        },
+                    }
+                }
+            }
+        });
+    }
+
+    function getTime(ticket) {
+        var n1 = parseInt(ticket / 4);
+        var n2 = parseInt(ticket % 4);
+        return (n1 + 9) + ":" + formatTwo(n2 * 15);
+    }
+
+    function formatTwo(number) {
+        if (number > 10) return number;
+        return "0" + number;
+    }
+
+    $(function () {
+        $('.date-picker').datepicker({
+            autoclose: true,
+            clearBtn: true,
+            startDate: new Date(),
+            onChanged: function (txt) {
+                //loadData(txt);
+                if (txt != '@Model.ToString("yyyy-MM-dd")') {
+                    window.location = '@Url.Content("~/Meeting/Index?date=")' + txt;
+                }
+            }
+        });
+
+        loadData('@Model.ToString("yyyy-MM-dd")')
+    })
+
+    function loadData(date) {
+        $.get('@Url.Content("~/Meeting/GetMeeting?date=")' + date, function (result) {
+            if (result.Success) {
+                myvue.meeting = result.Data;
+            } else {
+                bootbox.alert(result.Msg);
+            }
+        })
+    }
+</script>

@@ -1,0 +1,54 @@
+﻿<#@ template debug="false" hostspecific="true" language="C#" #>
+<#@ output extension=".cs" #>
+<#@ assembly name="System.Data.dll" #>
+<#@ assembly name="System.Data.DataSetExtensions.dll" #>
+<#@ import namespace="System" #>
+<#@ import namespace="System.Xml" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Data" #>
+<#@ import namespace="System.Data.SqlClient" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="System.IO" #>
+<#@ include file="$(SolutionDir)packages/Include/DbHelper.ttinclude"  #>
+<#@ include file="$(SolutionDir)packages/Include/MultipleOutputHelper.ttinclude"#>
+<#
+	var manager = Manager.Create(Host, GenerationEnvironment);  
+	foreach(string tb_name in DbHelper.GetDbTableNames(config.ConnectionString,config.ExcludeTable))
+	{
+		manager.StartNewFile(DbHelper.ConvertColumnName(tb_name)+"Dao.cs");
+
+		#>
+using Entity.Demo;
+using Framework;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Dao.Demo
+{	
+
+	public partial class <#=DbHelper.ConvertColumnName(tb_name)#>Dao : BaseDao<<#=DbHelper.ConvertColumnName(tb_name)#>>
+    {
+		
+    }
+}
+		<#
+		manager.EndBlock();    
+	}
+	manager.Process(true);  
+#>
+
+
+<#+
+
+	public class config
+	{
+		public static readonly string DbDatabase="Demo";
+		public static readonly string ConnectionString="Data Source=.;Initial Catalog=Demo;User ID=sa;Password=123456;";
+		//批量生成时，需要排除的表
+		public static readonly string[] ExcludeTable = new string[] { "ad_info_111", "test" };
+	}
+#>
+

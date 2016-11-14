@@ -1,0 +1,29 @@
+﻿
+<template id="temp-grid-btn">
+    <div>
+        <span v-if="column.buttons">
+            <a v-for="item in column.buttons" v-on:click="clickLink(item)" href="javascript:void(0)" class="btn btn-xs">
+                <i class="fa fa-trash-o"></i> {{item.title}}
+            </a>
+        </span>
+        <span v-if="column.format" v-html="column.format(pram)">
+        </span>
+        <span v-else>
+            {{ pram[column.name] }}
+        </span>
+    </div>
+</template>
+
+<script>
+    Vue.component('grid-btn', {
+        template: '#temp-grid-btn',
+        props: ['pram', 'column'],
+        methods: {
+            clickLink: function (column) {
+                column.clicked(this.pram);
+            }
+        }
+    })
+
+</script>
+

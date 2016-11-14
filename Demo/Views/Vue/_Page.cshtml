@@ -1,0 +1,84 @@
+﻿
+<template id="temp-page">
+    <div  class="row" style="margin-top: 5px;">
+        <div class="col-sm-4">
+            <div class="dataTables_info">{{PageMsg}}</div>
+        </div>
+        <div class="col-sm-8 " v-if="this.pageCount > 1">
+            <ul class="pagination pull-right">
+                <li class="prev">
+                    <a @@click="pageTo(1)" href="javascript:void(0)">首页</a>
+                </li>
+                <li v-for="item in PageIndexArr" v-bind:class="{ 'active': isActive(item) }">
+                    <a @@click="pageTo(item)" href="javascript:void(0)">{{item}}</a>
+                </li>
+                <li class="next">
+                    <a @@click="lastPage" href="javascript:void(0)">末页</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</template>
+
+<script>
+    Vue.component('page', {
+        template: '#temp-page',
+        props: [
+            "pageIndex",
+            "pageCount",
+            "pageTotal",
+            "onchange"
+        ],
+        computed: {
+            //显示的数字
+            PageIndexArr: function () {
+                return GetPageIndex(this.pageCount, this.pageIndex)
+            },
+            //显示描述信息
+            PageMsg: function () {
+                return '当前第' + this.pageIndex + '页， 共' + this.pageCount + '页，一共' + this.pageTotal + ' 条记录';
+            }
+        },
+        methods: {
+            pageTo: function (pageIndex) {
+                //父组件重新加载数据
+                if (this.pageIndex != pageIndex)
+                    this.onchange(pageIndex);
+            },
+            lastPage: function () {
+                this.pageTo(this.pageCount)
+            },
+            isActive: function (index) {
+                return this.pageIndex == index;
+            }
+        }
+    })
+
+    function GetPageIndex(all, cur) {
+        var left = 1
+        var right = all
+        var ar = []
+        if (all >= 11) {
+            if (cur > 5 && cur < all - 4) {
+                left = cur - 5
+                right = cur + 4
+            } else {
+                if (cur <= 5) {
+                    left = 1
+                    right = 10
+                } else {
+                    right = all
+                    left = all - 9
+                }
+            }
+        }
+        while (left <= right) {
+            ar.push(left)
+            left++
+        }
+        return ar
+    }
+</script>
+
+
+

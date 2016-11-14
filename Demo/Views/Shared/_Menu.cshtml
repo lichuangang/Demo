@@ -1,0 +1,44 @@
+﻿<!-- Page Sidebar Header-->
+<!-- /Page Sidebar Header -->
+<!-- Sidebar Menu -->
+<div style="position:relative">
+    <ul class="nav sidebar-menu" id="ulMenus">
+
+        <li v-for="item in menus" v-bind:class="{'active':isThisMenu(item.Name)}">
+            <a v-bind:href="item.Url">
+                <i v-bind:class="item.icon"></i>
+                <span class="menu-text">{{item.Title}}</span>
+            </a>
+        </li>
+    </ul>
+    <!-- /Sidebar Menu -->
+    @*<img src="~/assets/img/menu.png" style="position:absolute;left:4px;width:220px;padding-top:60px;z-index:2" />*@
+</div>
+
+<script>
+    var thisMenu = '@ViewBag.Nav';
+
+    var menuVue = new Vue({
+        el: '#ulMenus',
+        data: {
+            menus: [],
+            thisMenu: thisMenu
+        },
+        methods: {
+            isThisMenu: function (id) {
+                return thisMenu == id;
+            }
+        }
+    });
+
+    $(function () {
+        $.get('@Url.Content("~/Module/Menu")', function (d) {
+            if (d.Success) {
+                menuVue.menus = d.Data;
+            } else {
+                bootbox.alert(d.Msg);
+            }
+        })
+    })
+
+</script>

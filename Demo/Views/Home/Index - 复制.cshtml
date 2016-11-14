@@ -1,0 +1,81 @@
+﻿@{
+    ViewBag.Title = "主页";
+    ViewBag.Nav = "Home/Index";
+}
+
+
+<div id="demo">
+
+    <grid v-bind:rows="PageData.Data"
+          v-bind:columns="Columns"
+          v-bind:sort="PageInfo.SortAs"
+          v-bind:asc="PageInfo.IsAsc"
+          v-bind:sort-click="OnSortClick">
+    </grid>
+
+    <page v-bind:page-index="PageInfo.PageIndex"
+          v-bind:page-count="PageData.PageCount"
+          v-bind:page-total="PageData.Total"
+          v-bind:onchange="OnPageChange">
+    </page>
+</div>
+
+
+<script>
+    var cols = [
+    {
+        title: '操作', name: 'opt', type: 'link', buttons:
+            [
+                {
+                    clicked: function (item) {
+                        console.log('clicked1', item.IPadInfoList)
+                    },
+                    title: '打开1',
+                },
+                {
+                    clicked: function (item) {
+                        console.log('clicked2', item.Desc)
+                    },
+                    title: '打开2',
+                }
+            ]
+    },
+    {
+        title: '状态', name: 'Status',
+        format: function (item) {
+            return item.Status == 0 ? '未分配' : item.Status == 1 ? '已分配' : item.Status == 2 ? '已领取' : '已归还';
+        }
+    },
+    { title: 'IPad', name: 'IPadInfoList', sort: true },
+    { title: '备注', name: 'Desc' },
+    { title: '航线', name: 'TASK_ROUTE' },
+    { title: '开始时间', name: 'TASK_BEG_TIME', sort: true },
+    { title: '结束时间', name: 'TASK_END_TIME' },
+    ];
+
+
+
+    new Vue({
+        el: '#demo',
+        data: {
+            Columns: cols,
+            PageData: {
+                Data: [{ IPadInfoList: 'abc', Desc: 'desc' }, { IPadInfoList: 'EFB', Desc: 'AA' }],
+                PageCount: 5,
+                Total: 45
+            },
+            PageInfo: PageInfo(),
+        },
+        methods: {
+            OnPageChange: function (index) {
+                this.PageInfo.PageIndex = index;
+                console.log(index)
+            },
+            OnSortClick: function (name) {
+                this.PageInfo.SortAs = name;
+                this.PageInfo.IsAsc = !this.PageInfo.IsAsc;
+                console.log(this.PageInfo.SortAs, this.PageInfo.IsAsc)
+            }
+        }
+    })
+</script>

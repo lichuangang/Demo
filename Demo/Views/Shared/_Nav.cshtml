@@ -1,0 +1,43 @@
+﻿<div class="navbar">
+    <div class="navbar-inner">
+        <div class="navbar-container">
+            <!-- Navbar Barnd -->
+            <div class="navbar-header pull-left">
+                <a href="#" class="navbar-brand">
+                    <small>
+                        <img src="~/assets/img/logo.png" style="height:40px;width:auto"/>
+                    </small>
+                </a>
+                <span style="margin-left:50px;font-size:22px;line-height:40px;color:white;font-weight:bolder">会议申请系统</span>
+            </div>
+            <!-- /Navbar Barnd -->
+            <!-- Sidebar Collapse -->
+            <!-- /Sidebar Collapse -->
+            <!-- Account Area and Settings --->
+            <div class="navbar-header pull-right">
+                <div class="navbar-account">
+                    <ul class="account-area">
+                        <li>
+                            <a class="login-area dropdown-toggle" data-toggle="dropdown">
+                                <section style="width:120px; text-align:right">
+                                    <h2><span class="profile"><span>张三   &nbsp;▼</span></span></h2>
+                                </section>
+                            </a>
+                            <!--Login Area Dropdown-->
+                            <ul class="pull-right dropdown-menu dropdown-arrow dropdown-login-area">
+                                <li class="username"><a>张三</a></li>
+                                <li class="email"><a>zhangsan</a></li>
+                                <li class="edit">
+                                    <a target="_blank" href="@Url.Content("~/Home/UpdatePwd")" class="pull-left">修改密码</a>
+                                    <a href="@Url.Content("~/Home/LoginOut")" class="pull-right">退出登录</a>
+                                </li>
+                            </ul>
+                            <!--/Login Area Dropdown-->
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <!-- /Account Area and Settings -->
+        </div>
+    </div>
+</div>
