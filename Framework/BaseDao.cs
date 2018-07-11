@@ -25,7 +25,7 @@ namespace Framework
         {
             using (var db = GetDbInstance(isRead))
             {
-                return db.Queryable<T>().FirstOrDefault(where);
+                return db.Queryable<T>().First(where);
             }
         }
 
@@ -98,7 +98,7 @@ namespace Framework
         {
             using (var db = GetDbInstance(false))
             {
-                db.Insert<T>(entity);
+                db.Insertable<T>(entity);
             }
         }
 
@@ -106,7 +106,7 @@ namespace Framework
         {
             using (var db = GetDbInstance(false))
             {
-                db.InsertRange<T>(list);
+                db.Insertable<T>(list);
             }
         }
 
@@ -114,7 +114,7 @@ namespace Framework
         {
             using (var db = GetDbInstance(false))
             {
-                db.Update(entity);
+                db.Updateable(entity);
             }
         }
 
@@ -122,7 +122,7 @@ namespace Framework
         {
             using (var db = GetDbInstance(false))
             {
-                db.Update<T>(obj, where);
+                //db.Updateable<T>(obj, where);
             }
         }
 
@@ -130,7 +130,7 @@ namespace Framework
         {
             using (var db = GetDbInstance(false))
             {
-                db.UpdateRange<T>(list);
+                //db.UpdateRange<T>(list);
             }
 
         }
@@ -142,7 +142,7 @@ namespace Framework
         {
             using (var db = GetDbInstance(false))
             {
-                db.Delete<T>(where);
+                db.Deleteable<T>(where);
             }
         }
 
@@ -153,7 +153,7 @@ namespace Framework
         {
             using (var db = GetDbInstance(false))
             {
-                db.Delete<T, KType>(key);
+                db.Deleteable<T>(key);
             }
         }
 

@@ -15,7 +15,6 @@ namespace UnitTestProject1
             {
                 String url = "http://172.31.86.67:80/hsd//datainterface/yzClient/ifdCallback?taskid=443&result=true";
 
-
                 // url = url;
                 var httpRequest = (System.Net.HttpWebRequest)System.Net.WebRequest.Create(url);
                 httpRequest.Timeout = 20000;

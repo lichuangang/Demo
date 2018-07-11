@@ -15,10 +15,15 @@ namespace Framework
         public static SqlSugarClient GetInstance(string dbName)
         {
             //可以根据不同的DB字符串，实现多库查询及读写分离
-            string sqlLink=ConfigurationManagerUtil.Get(dbName);
-            var db = new SqlSugarClient(sqlLink);
-
-            return db;
+            string connectionStr = ConfigurationManagerUtil.Get(dbName);
+            var config = new ConnectionConfig()
+            {
+                ConnectionString = connectionStr, //必填
+                DbType = DbType.SqlServer, //必填
+                IsAutoCloseConnection = true, //默认false
+                InitKeyType = InitKeyType.SystemTable //默认SystemTable
+            };
+            return new SqlSugarClient(config);
         }
     }
 }

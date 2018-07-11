@@ -30,8 +30,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="SqlSugar">
-      <HintPath>..\packages\sqlSugar.3.1.1.4\lib\net40\SqlSugar.dll</HintPath>
+    <Reference Include="SqlSugar, Version=4.5.9.4, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\sqlSugar.4.5.9.4\lib\SqlSugar.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -59,6 +60,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="app.config" />
     <None Include="Demo\generate\Dao.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>Dao1.cs</LastGenOutput>
